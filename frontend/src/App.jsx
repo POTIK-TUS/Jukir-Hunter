@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SearchBar from './components/common/SearchBar';
 import LandingPage from './pages/LandingPage';
 import LaporPage from './pages/LaporPage';
 import PetaParkirPage from './pages/PetaParkirPage';

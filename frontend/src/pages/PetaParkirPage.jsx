@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import SearchBar from '../components/common/SearchBar';
 import L from 'leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
@@ -34,37 +35,31 @@ const PetaParkirPage = () => {
       })
       .catch(err => console.error(err));
   }, []);
+ 
+  const handleSearch = (keyword) => {
+  setSearchTerm(keyword);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchTerm) {
-      setFilteredReports(reports);
-      return;
-    }
-    const filtered = reports.filter(r => 
-      r.keterangan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.jenis_pelanggaran.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredReports(filtered);
-  };
+  if (!keyword) {
+    setFilteredReports(reports);
+    return;
+  }
+  const filtered = reports.filter((r) =>
+    r.keterangan?.toLowerCase().includes(keyword.toLowerCase()) ||
+    r.jenis_pelanggaran?.toLowerCase().includes(keyword.toLowerCase())
+  );
+  setFilteredReports(filtered);
+};
 
   return (
     <div className="container py-5">
       <h2 className="fw-bold mb-4 text-center">Peta Lokasi & Status Parkir</h2>
       
       {/* Search Bar */}
-      <form onSubmit={handleSearch} className="mb-4">
-        <div className="input-group input-group-lg docker-card p-1">
-          <input 
-            type="text" 
-            className="form-control border-0 shadow-none" 
-            placeholder="Cari lokasi parkir atau kata kunci..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button className="btn btn-docker-primary px-4" type="submit">Cari Area</button>
-        </div>
-      </form>
+      <SearchBar 
+        onSearch={handleSearch}
+        placeholder="Cari Wilayah"
+      />
+      <div className="mb-4"></div>
 
       {/* Peta Parkir dengan Heatmap & Marker */}
       <div className="docker-card p-3 mb-5">

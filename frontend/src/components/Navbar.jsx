@@ -1,26 +1,70 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X, ShieldCheck, ArrowRight } from 'lucide-react';
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const navLinks = [
+    { name: 'Peta Parkir', path: '/peta-parkir' },
+  ];
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-3">
       <div className="container">
-        <Link className="navbar-brand d-flex align-items-center fw-bold fs-4 text-primary" to="/">
-          <span className="me-2"></span> Jukir Hunter
+
+        {/* Logo */}
+        <Link
+          className="navbar-brand d-flex align-items-center fw-bold fs-4 text-primary"
+          to="/"
+          onClick={() => setIsOpen(false)}
+        >
+          <ShieldCheck size={30} className="me-2" />
+          Jukir Hunter
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span className="navbar-toggler-icon"></span>
+
+        {/* Mobile Toggle */}
+        <button
+          className="navbar-toggler border-0 shadow-none"
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle navigation"
+          aria-expanded={isOpen}
+        >
+          {isOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto align-items-center gap-2">
+
+        {/* Navigation */}
+        <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
+          <ul className="navbar-nav ms-auto align-items-lg-center gap-2">
+
+            {navLinks.map((link) => (
+              <li className="nav-item" key={link.path}>
+                <Link
+                  className="nav-link fw-semibold text-dark"
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+
+            {/* CTA */}
             <li className="nav-item">
-              <Link className="nav-link fw-semibold text-dark" to="/peta-parkir">Peta Parkir</Link>
+              <Link
+                className="btn btn-primary fw-semibold ms-lg-2 px-4 py-2 d-flex align-items-center justify-content-center gap-2"
+                to="/lapor"
+                onClick={() => setIsOpen(false)}
+              >
+                Ayo LAPOR!
+                <ArrowRight size={18} />
+              </Link>
             </li>
-            <li className="nav-item">
-              <Link className="btn btn-docker-primary ms-2" to="/lapor">Ayo LAPOR!</Link>
-            </li>
+
           </ul>
         </div>
+
       </div>
     </nav>
   );
