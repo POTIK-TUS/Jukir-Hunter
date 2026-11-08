@@ -71,7 +71,6 @@ def get_reports(
         "features": features
     }
 
-
 # ==========================================
 # GET: REPORT BY LOCATION
 # ==========================================
