@@ -7,14 +7,14 @@ import 'leaflet/dist/leaflet.css';
 
 const PetaParkirPage = () => {
   const [activeTab, setActiveTab] = useState('resmi'); // 'resmi' | 'laporan'
-  const [searchQuery, setSearchQuery] = useState('Jl. Tunjungan, Surabaya');
+  const [searchQuery, setSearchQuery] = useState('');
   const [reports, setReports] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState({
     nama: 'Parkir tepi jalan, Jl. Tunjungan',
     tarifMotor: 2000,
     tarifMobil: 5000,
     metode: 'QRIS, kartu, voucher',
-    infoJukir: 'Jukir resmi memakai rompi merah, peluit, dan kartu tanda anggota (KTA)[cite: 8].'
+    infoJukir: 'Jukir resmi memakai rompi merah, peluit, dan kartu tanda anggota (KTA).'
   });
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const PetaParkirPage = () => {
   }, []);
 
   return (
-    <div className="container py-3">
+    <div className="container py-2">
       {/* Top Search Bar */}
       <div className="mb-3">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
@@ -67,7 +67,7 @@ const PetaParkirPage = () => {
       <div className="sj-card p-3">
         <h6 className="fw-bold mb-1">{selectedSpot.nama}</h6>
         <p className="text-muted small mb-3">
-          Titik resmi Dishub. Tanpa karcis: bayar QRIS resmi, kartu, atau voucher[cite: 8].
+          Titik resmi Dishub. Tanpa karcis: bayar QRIS resmi, kartu, atau voucher.
         </p>
 
         <div className="row text-center border-top border-bottom py-2 mb-3 g-0">
@@ -85,7 +85,7 @@ const PetaParkirPage = () => {
           <strong>Metode bayar:</strong> {selectedSpot.metode}
         </div>
         <p className="small text-secondary mb-0">
-          💡 {selectedSpot.infoJukir}
+          {selectedSpot.infoJukir}
         </p>
       </div>
     </div>

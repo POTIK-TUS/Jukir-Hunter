@@ -5,7 +5,7 @@ const LandingPage = () => {
   return (
     <div className="container py-2">
       {/* Header Banner */}
-      <div className="sj-box p-4 p-md-5">
+      <div className="sj-box p-4 md-5">
         <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
         <p className=" fs-10 mb-3" style={{ maxWidth: '600px' }}>
           Karcis sudah ditiadakan. Pastikan QRIS yang Anda bayar milik resmi Pemkot, dan laporkan parkir liar atau tarif tidak wajar langsung ke instansi berwenang.
@@ -31,10 +31,10 @@ const LandingPage = () => {
       <h5 className="fw-bold mb-3">CARA PAKAI</h5>
       <div className="row g-3 mb-4">
         {[
-          { step: "1", title: "Buka Peta", desc: "Lihat titik parkir resmi, tarif, dan metode bayar[cite: 14]." },
-          { step: "2", title: "Cek QRIS", desc: "Pindai QRIS sebelum membayar, cocokkan dengan daftar Dishub[cite: 14]." },
-          { step: "3", title: "Bayar Digital", desc: "QRIS resmi, kartu, atau voucher. Simpan bukti bayar[cite: 14]." },
-          { step: "4", title: "Lapor Pelanggaran", desc: "Pilih jenis pelanggaran dan kirim laporan[cite: 11, 14]." }
+          { step: "1", title: "Buka Peta", desc: "Lihat titik parkir resmi, tarif, dan metode bayar." },
+          { step: "2", title: "Cek QRIS", desc: "Pindai QRIS sebelum membayar, cocokkan dengan daftar Dishub." },
+          { step: "3", title: "Bayar Digital", desc: "QRIS resmi, kartu, atau voucher. Simpan bukti bayar." },
+          { step: "4", title: "Lapor Pelanggaran", desc: "Pilih jenis pelanggaran dan kirim laporan." }
         ].map((item) => (
           <div key={item.step} className="col-6 col-md-3">
             <div className="sj-card p-3 h-100">
@@ -54,13 +54,13 @@ const LandingPage = () => {
         <div className="col-md-6">
           <div className="sj-card p-3">
             <h6 className="fw-bold text-inverse">🔍 Cek QRIS</h6>
-            <p className="text-muted small mb-0">Hasil resmi, tidak terdaftar, atau perlu hati-hati sebelum Anda membayar[cite: 14].</p>
+            <p className="text-muted small mb-0">Hasil resmi, tidak terdaftar, atau perlu hati-hati sebelum Anda membayar.</p>
           </div>
         </div>
         <div className="col-md-6">
           <div className="sj-card p-3">
             <h6 className="fw-bold text-inverse">📩 Laporan Terarah</h6>
-            <p className="text-muted small mb-0">Tarif dan QRIS ke Dishub. Parkir liar ke Satpol PP atau kepolisian[cite: 14].</p>
+            <p className="text-muted small mb-0">Tarif dan QRIS ke Dishub. Parkir liar ke Satpol PP atau kepolisian.</p>
           </div>
         </div>
       </div>
