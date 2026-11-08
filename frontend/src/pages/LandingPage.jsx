@@ -7,7 +7,7 @@ const LandingPage = () => {
       {/* Header Banner */}
       <div className="sj-box p-4 md-5">
         <div className="self-center-safe">
-          <span className="font-mono">Validasi Parkir Surabaya</span>
+          <span className="font-mono">Validasi Parkir by POTIK TUS</span>
           <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
           <p className="mb-3" style={{maxWidth: '600px'}}>
             Karcis sudah ditiadakan. Pastikan QRIS yang Anda bayar milik resmi Pemkot, dan laporkan parkir liar atau tarif tidak wajar langsung ke instansi berwenang.
@@ -43,7 +43,7 @@ const LandingPage = () => {
         ].map((item) => (
           <div key={item.step} className="col-6 col-md-3">
             <div className="sj-card p-3 h-100">
-              <div className="badge bg-success rounded-circle mb-2" style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="badge bg-blue-950 rounded-circle mb-2" style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {item.step}
               </div>
               <h6 className="fw-bold mb-1">{item.title}</h6>
