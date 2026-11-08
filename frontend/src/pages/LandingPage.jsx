@@ -44,7 +44,7 @@ const LandingPage = () => {
       <section className="hero-section">
         <div className="container">
           <h1 className="hero-title mb-3">JUKIR HUNTER</h1>
-          <p className="lead text-muted mb-4 fs-5 mx-auto" style={{ maxWidth: '600px' }}>
+          <p className="lead text-muted mb-4 fs-5 mx-auto" style={{ maxWidth: '400px' }}>
             Laporkan keberadaan juru parkir liar dan pantau titik rawan pelanggaran secara transparan dan realtime.
           </p>
           <div className="d-flex justify-content-center gap-3">
