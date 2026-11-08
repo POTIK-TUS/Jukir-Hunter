@@ -12,17 +12,17 @@ import './App.css';
 function App() {
   return (
     <Router>
+      <main className= "container bg-white border shadow p-0">
       <Header />
-      <main className= "container bg-white">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/peta-parkir" element={<PetaParkirPage />} />
           <Route path="/cek-qris" element={<CekQRISPage />} />
           <Route path="/lapor" element={<LaporPage />} />
         </Routes>
-      </main>
       <Footer />
       <Menubar />
+      </main>
     </Router>
   );
 }

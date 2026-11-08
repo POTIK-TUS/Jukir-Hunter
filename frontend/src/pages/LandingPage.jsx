@@ -3,33 +3,37 @@ import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
-    <div className="py-2">
+    <div className="container">
       {/* Header Banner */}
       <div className="sj-box p-4 md-5">
-        <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
-        <p className=" fs-10 mb-3" style={{ maxWidth: '600px' }}>
-          Karcis sudah ditiadakan. Pastikan QRIS yang Anda bayar milik resmi Pemkot, dan laporkan parkir liar atau tarif tidak wajar langsung ke instansi berwenang.
-        </p>
-        <div className="d-flex flex-wrap gap-2">
-          <Link to="/cek-qris" className="btn btn-warning btn-lg">
-            Cek QRIS
-          </Link>
-          <Link to="/peta-parkir" className="btn btn-success btn-lg px-3">
-            Buka Peta Parkir
-          </Link>
+        <div className="self-center-safe">
+          <span className="font-mono">Validasi Parkir Surabaya</span>
+          <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
+          <p className="mb-3" style={{maxWidth: '600px'}}>
+            Karcis sudah ditiadakan. Pastikan QRIS yang Anda bayar milik resmi Pemkot, dan laporkan parkir liar atau tarif tidak wajar langsung ke instansi berwenang.
+          </p>
+          <div className="mt-8 d-flex flex-wrap gap-2 mb-3">
+            <Link to="/cek-qris" className="btn btn-lg bg-white">
+              <p className="mb-0 font-bold ">Cek QRIS</p>
+            </Link>
+            <Link to="/peta-parkir" className="btn btn-lg outline-white border-white">
+              <p className="mb-0 text-white font-semibold">Lihat semua menu</p>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Problem Section */}
       <div className="p-4 mb-4">
-        <h3 className= "fw-bold">Bayar digital itu praktis, tapi... rawan salah bayar</h3>
+        <p className="mb-0 font-mono font-semibold text-gray-400">MASALAHNYA</p>
+        <h3 className= "fw-bold line-clamp-2">Bayar digital itu praktis, tapi... rawan salah bayar.</h3>
         <p className="mb-0 text-dark medium" style={{maxWidth: '700px' }}>
           Tanpa karcis, warga hanya mengandalkan QRIS yang diberikan juru parkir. Sehingga warga sulit memastikan QRIS itu resmi atau tidak resmi, serta alur pelaporan yang belum runtut.
         </p>
       </div>
 
       {/* Cara Pakai Steps */}
-      <h5 className="fw-bold mb-3">CARA PAKAI</h5>
+      <h5 className="p-2 fw-bold mb-3">CARA PAKAI</h5>
       <div className="row g-3 mb-4">
         {[
           { step: "1", title: "Buka Peta", desc: "Lihat titik parkir resmi, tarif, dan metode bayar." },
