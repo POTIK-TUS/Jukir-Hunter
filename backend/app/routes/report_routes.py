@@ -1,62 +1,69 @@
-from fastapi import APIRouter
+
+from fastapi import APIRouter, HTTPException, Query
 from pathlib import Path
-import pandas as pd
+import json
 
 router = APIRouter(
     prefix="/api/report",
     tags=["Reports"]
 )
 
+# ==========================================
+# CONFIGURATION
+# ==========================================
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-DATA_PATH = BASE_DIR / "data" / "jukir_hunter_dummy_surabaya.csv"
+DATA_PATH = BASE_DIR / "data" / "dummy_reports.json"
+
+
+# ==========================================
+# LOAD GEOJSON DATA
+# ==========================================
 
 def load_reports():
-    df = pd.read_csv(DATA_PATH)
-    df = df.dropna(subset=['latitude', 'longitude'])
-    return df
+
+    if not DATA_PATH.exists():
+        raise HTTPException(
+            status_code=500,
+            detail="Report dataset not found"
+        )
+
+    try:
+        with open(DATA_PATH, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        if data.get("type") != "FeatureCollection":
+            raise ValueError("Invalid GeoJSON FeatureCollection")
+
+        return data
+
+    except (json.JSONDecodeError, ValueError) as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load report data: {str(error)}"
+        )
+
+
+# ==========================================
+# GET: ALL REPORTS
+# ==========================================
 
 @router.get("/")
 def get_reports(
-    category: str | None = None,
-    status: str | None = None
+    location: str | None = None
 ):
 
-    df = load_reports()
+    data = load_reports()
 
-    if category:
-        df = df[df["category"] == category]
+    features = data.get("features", [])
 
-    if status:
-        df = df[df["status"] == status]
-
-    features = []
-
-    for _, row in df.iterrows():
-
-        features.append({
-            "type": "Feature",
-
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    float(row["longitude"]),
-                    float(row["latitude"])
-                ]
-            },
-
-            "properties": {
-                "report_id": row["report_id"],
-                "category": row["category"],
-                "description": row["description"],
-                "location_name": row["location_name"],
-                "district": row["district"],
-                "status": row["status"],
-                "reported_amount": int(row["reported_amount"]),
-                "vehicle_type": row["vehicle_type"],
-                "created_at": row["created_at"],
-                "is_synthetic": bool(row["is_synthetic"])
-            }
-        })
+    # Filter berdasarkan nama lokasi
+    if location:
+        features = [
+            feature for feature in features
+            if feature.get("properties", {})
+            .get("location", "").lower() == location.lower()
+        ]
 
     return {
         "type": "FeatureCollection",
@@ -65,30 +72,31 @@ def get_reports(
     }
 
 
-# GET: Mengambil laporan berdasarkan ID
-@router.get("/{report_id}")
-def get_report_by_id(report_id: str):
+# ==========================================
+# GET: REPORT BY LOCATION
+# ==========================================
 
-    df = load_reports()
+@router.get("/location/{location_name}")
+def get_report_by_location(location_name: str):
 
-    report = df[df["report_id"] == report_id]
+    data = load_reports()
 
-    if report.empty:
-        return {
-            "message": "Report not found"
-        }
+    for feature in data.get("features", []):
 
-    row = report.iloc[0]
+        properties = feature.get("properties", {})
 
-    return {
-        "report_id": row["report_id"],
-        "category": row["category"],
-        "description": row["description"],
-        "location_name": row["location_name"],
-        "district": row["district"],
-        "status": row["status"],
-        "latitude": float(row["latitude"]),
-        "longitude": float(row["longitude"]),
-        "reported_amount": int(row["reported_amount"]),
-        "created_at": row["created_at"]
-    }
+        if properties.get("location", "").lower() == location_name.lower():
+
+            longitude, latitude = feature["geometry"]["coordinates"]
+
+            return {
+                "location": properties.get("location"),
+                "report_count": properties.get("report_count", 0),
+                "latitude": latitude,
+                "longitude": longitude
+            }
+
+    raise HTTPException(
+        status_code=404,
+        detail="Location not found"
+    )
