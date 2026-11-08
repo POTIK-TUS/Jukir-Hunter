@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <main>
+      <main className= "container bg-white">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/peta-parkir" element={<PetaParkirPage />} />

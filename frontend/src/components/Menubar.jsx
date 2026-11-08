@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const Menubar = () => {
   return (
-    <nav className="bottom-menubar shadow-sm">
+    <nav className="container bottom-menubar shadow-sm">
       <NavLink to="/peta-parkir" className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}>
         <span className="nav-icon">🗺️</span>
         <span>Peta</span>

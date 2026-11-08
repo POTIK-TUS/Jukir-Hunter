@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
-    <div className="container py-2">
+    <div className="py-2">
       {/* Header Banner */}
       <div className="sj-box p-4 md-5">
         <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
@@ -22,8 +22,9 @@ const LandingPage = () => {
 
       {/* Problem Section */}
       <div className="p-4 mb-4">
-        <p className="mb-0 text-dark medium">
-          Bayar digital itu praktis, tapi rawan salah bayar. Tanpa karcis, warga hanya mengandalkan QRIS yang disodorkan juru parkir. Warga sulit memastikan QRIS itu resmi, dan laporan pelanggaran belum punya jalur yang jelas.
+        <h3 className= "fw-bold">Bayar digital itu praktis, tapi... rawan salah bayar</h3>
+        <p className="mb-0 text-dark medium" style={{maxWidth: '700px' }}>
+          Tanpa karcis, warga hanya mengandalkan QRIS yang diberikan juru parkir. Sehingga warga sulit memastikan QRIS itu resmi atau tidak resmi, serta alur pelaporan yang belum runtut.
         </p>
       </div>
 
