@@ -1,150 +1,69 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.heat';
-import axios from 'axios';
-
-const HeatmapLayer = ({ points }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!points || points.length === 0) return;
-    const heatPoints = points.map(p => [p.latitude, p.longitude, p.weight || 0.5]);
-    const heat = L.heatLayer(heatPoints, { radius: 25, blur: 15, maxZoom: 17 }).addTo(map);
-
-    return () => {
-      map.removeLayer(heat);
-    };
-  }, [map, points]);
-
-  return null;
-};
 
 const LandingPage = () => {
-  const [reports, setReports] = useState([]);
-  const [stats, setStats] = useState({ perluTindakan: [], dalamProses: [], terverifikasi: [] });
-
-  useEffect(() => {
-    axios.get('http://localhost:8000/api/reports/heatmap')
-      .then(res => {
-        setReports(res.data);
-        const pt = res.data.filter(r => r.status === 'Perlu Tindakan');
-        const dp = res.data.filter(r => r.status === 'Dalam Proses');
-        const tv = res.data.filter(r => r.status === 'Terverifikasi');
-        setStats({ perluTindakan: pt, dalamProses: dp, terverifikasi: tv });
-      })
-      .catch(err => console.error(err));
-  }, []);
-
   return (
-    <div>
-      {/* Hero Header dengan subtle gradient */}
-      <section className="hero-section">
-        <div className="container">
-          <h1 className="hero-title mb-3">JUKIR HUNTER</h1>
-          <p className="lead text-muted mb-4 fs-5 mx-auto" style={{ maxWidth: '400px' }}>
-            Laporkan keberadaan juru parkir liar dan pantau titik rawan pelanggaran secara transparan dan realtime.
-          </p>
-          <div className="d-flex justify-content-center gap-3">
-            <Link to="/lapor" className="btn btn-docker-primary btn-lg">Ayo LAPOR!</Link>
-            <Link to="/peta-parkir" className="btn btn-docker-outline btn-lg">Peta Parkir</Link>
-          </div>
+    <div className="container py-2">
+      {/* Header Banner */}
+      <div className="sj-box p-4 md-5">
+        <h1 className="fw-bold mb-2">Parkir jujur, bayar aman.</h1>
+        <p className=" fs-10 mb-3" style={{ maxWidth: '600px' }}>
+          Karcis sudah ditiadakan. Pastikan QRIS yang Anda bayar milik resmi Pemkot, dan laporkan parkir liar atau tarif tidak wajar langsung ke instansi berwenang.
+        </p>
+        <div className="d-flex flex-wrap gap-2">
+          <Link to="/cek-qris" className="btn btn-warning btn-lg">
+            Cek QRIS
+          </Link>
+          <Link to="/peta-parkir" className="btn btn-success btn-lg px-3">
+            Buka Peta Parkir
+          </Link>
         </div>
-      </section>
+      </div>
 
-      {/* Heatmap & Live Status Section */}
-      <section className="py-5">
-        <div className="container">
-          <div className="row g-4">
-            <div className="col-lg-8">
-              <div className="docker-card p-3 h-100">
-                <h5 className="fw-bold mb-3">Peta Heatmap Laporan Realtime</h5>
-                <div style={{ height: '420px', width: '100%', borderRadius: '6px', overflow: 'hidden' }}>
-                  <MapContainer center={[-7.9666, 112.6326]} zoom={13} style={{ height: '100%', width: '100%' }}>
-                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                    <HeatmapLayer points={reports} />
-                  </MapContainer>
-                </div>
-              </div>
-            </div>
+      {/* Problem Section */}
+      <div className="p-4 mb-4">
+        <p className="mb-0 text-dark medium">
+          Bayar digital itu praktis, tapi rawan salah bayar. Tanpa karcis, warga hanya mengandalkan QRIS yang disodorkan juru parkir. Warga sulit memastikan QRIS itu resmi, dan laporan pelanggaran belum punya jalur yang jelas.
+        </p>
+      </div>
 
-            <div className="col-lg-4">
-              <div className="docker-card p-4 h-100">
-                <h5 className="fw-bold mb-3">Keterangan Area</h5>
-                <div className="d-flex flex-column gap-3">
-                  <div className="p-3 bg-light rounded border-danger border-4">
-                    <span className="badge bg-danger mb-1">Perlu Tindakan</span>
-                    <div className="fw-bold">Area Terdeteksi High Risk</div>
-                    <small className="text-muted">Total: {stats.perluTindakan.length} Titik Laporan</small>
-                  </div>
-                  <div className="p-3 bg-light rounded border-warning border-4">
-                    <span className="badge bg-warning text-dark mb-1">Dalam Proses</span>
-                    <div className="fw-bold">Area Penanganan Petugas</div>
-                    <small className="text-muted">Total: {stats.dalamProses.length} Titik Laporan</small>
-                  </div>
-                  <div className="p-3 bg-light rounded border-success border-4">
-                    <span className="badge bg-success mb-1">Terverifikasi</span>
-                    <div className="fw-bold">Area Steril / Penertiban</div>
-                    <small className="text-muted">Total: {stats.terverifikasi.length} Titik Laporan</small>
-                  </div>
-                </div>
+      {/* Cara Pakai Steps */}
+      <h5 className="fw-bold mb-3">CARA PAKAI</h5>
+      <div className="row g-3 mb-4">
+        {[
+          { step: "1", title: "Buka Peta", desc: "Lihat titik parkir resmi, tarif, dan metode bayar." },
+          { step: "2", title: "Cek QRIS", desc: "Pindai QRIS sebelum membayar, cocokkan dengan daftar Dishub." },
+          { step: "3", title: "Bayar Digital", desc: "QRIS resmi, kartu, atau voucher. Simpan bukti bayar." },
+          { step: "4", title: "Lapor Pelanggaran", desc: "Pilih jenis pelanggaran dan kirim laporan." }
+        ].map((item) => (
+          <div key={item.step} className="col-6 col-md-3">
+            <div className="sj-card p-3 h-100">
+              <div className="badge bg-success rounded-circle mb-2" style={{ width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {item.step}
               </div>
+              <h6 className="fw-bold mb-1">{item.title}</h6>
+              <p className="text-muted small mb-0">{item.desc}</p>
             </div>
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
 
-      {/* Section Alur Pelaporan */}
-      <section className="py-5 bg-light border-top border-bottom">
-        <div className="container">
-          <h2 className="text-center fw-bold mb-5">Alur Pelaporan</h2>
-          <div className="row g-4">
-            {[1, 2, 3, 4].map((step) => (
-              <div key={step} className="col-md-3">
-                <div className="docker-card p-3 text-center h-100">
-                  <div className="bg-secondary bg-opacity-10 rounded mb-3 d-flex align-items-center justify-content-center" style={{ height: '160px' }}>
-                    {/* Placeholder Embed Foto */}
-                    <span className="text-muted small">[ Embed Foto Step {step} ]</span>
-                  </div>
-                  <h6 className="fw-bold">Langkah {step}</h6>
-                  <p className="text-muted small mb-0">Deskripsi singkat alur pelaporan juru parkir liar langkah ke-{step}.</p>
-                </div>
-              </div>
-            ))}
+      {/* Fitur Utama */}
+      <h5 className="fw-bold mb-3">FITUR UTAMA</h5>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <div className="sj-card p-3">
+            <h6 className="fw-bold text-inverse">🔍 Cek QRIS</h6>
+            <p className="text-muted small mb-0">Hasil resmi, tidak terdaftar, atau perlu hati-hati sebelum Anda membayar.</p>
           </div>
         </div>
-      </section>
-
-      {/* Section Contoh Pelaporan */}
-      <section className="py-5">
-        <div className="container">
-          <h2 className="text-center fw-bold mb-5">Contoh Pelaporan</h2>
-          <div className="row g-4">
-            <div className="col-md-6">
-              <div className="docker-card p-4">
-                <div className="badge bg-danger mb-2">Pelanggaran Tarif</div>
-                <h5 className="fw-bold">Parkir Minimarket X</h5>
-                <p className="text-muted small">Diminta Rp 5.000 padahal tarif resmi Rp 2.000 dan tidak ada karcis.</p>
-                <div className="docker-code-box">
-                  <code>STATUS: TERVERIFIKASI_PETUGAS</code>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="docker-card p-4">
-                <div className="badge bg-warning text-dark mb-2">Jukir Tanpa KTA</div>
-                <h5 className="fw-bold">Kawasan Kuliner Y</h5>
-                <p className="text-muted small">Oknum menarik biaya tanpa atribut dan karcis resmi daerah.</p>
-                <div className="docker-code-box">
-                  <code>STATUS: DALAM_PROSES_INVESTIGASI</code>
-                </div>
-              </div>
-            </div>
+        <div className="col-md-6">
+          <div className="sj-card p-3">
+            <h6 className="fw-bold text-inverse">📩 Laporan Terarah</h6>
+            <p className="text-muted small mb-0">Tarif dan QRIS ke Dishub. Parkir liar ke Satpol PP atau kepolisian.</p>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

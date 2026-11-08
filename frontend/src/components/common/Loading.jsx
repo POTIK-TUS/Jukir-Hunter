@@ -1,12 +1,13 @@
 import React from 'react';
 
-const Loading = ({ message = 'Loading, Tunggu sebentar' }) => {
-    return (
-        <div className="d-flex flex-column align-items-center justify-content-center vh-100">
-            <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>
-            <p className="mt-3 text-secondary">{message}</p>
-        </div>
-    )
-}
+const Loading = () => {
+  return (
+    <div className="d-flex justify-content-center align-items-center py-5">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Memuat...</span>
+      </div>
+    </div>
+  );
+};
+
+export default Loading;
