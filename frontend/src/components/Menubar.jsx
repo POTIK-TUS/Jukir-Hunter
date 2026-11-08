@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShieldCheck, ArrowRight } from 'lucide-react';
 
-const Navbar = () => {
+const Menubar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const navLinks = [
@@ -10,7 +10,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-3">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white border-top fixed-bottom py-2 shadow-lg" style={{ zIndex: 1050 }}>
       <div className="container">
 
         {/* Logo */}
@@ -70,4 +70,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Menubar;
