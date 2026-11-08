@@ -1,27 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
 import Menubar from './components/Menubar';
 import Footer from './components/Footer';
-import SearchBar from './components/common/SearchBar';
 import LandingPage from './pages/LandingPage';
-import LaporPage from './pages/LaporPage';
 import PetaParkirPage from './pages/PetaParkirPage';
+import LaporPage from './pages/LaporPage';
+import CekQRISPage from './pages/CekQRISPage';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="d-flex flex-column min-vh-100 pb-5 mb-4">
-        <main className="flex-grow-1">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/lapor" element={<LaporPage />} />
-            <Route path="/peta-parkir" element={<PetaParkirPage />} />
-          </Routes>
-        </main>
-        <Menubar />
-        <Footer />
-      </div>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/peta-parkir" element={<PetaParkirPage />} />
+          <Route path="/cek-qris" element={<CekQRISPage />} />
+          <Route path="/lapor" element={<LaporPage />} />
+        </Routes>
+      </main>
+      <Footer />
+      <Menubar />
     </Router>
   );
 }

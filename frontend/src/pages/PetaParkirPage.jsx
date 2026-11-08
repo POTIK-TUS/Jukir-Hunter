@@ -1,162 +1,93 @@
-
 import React, { useState, useEffect } from 'react';
-import SearchBar from '../components/common/SearchBar';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import axios from 'axios';
-import MapContainer from '../map/MapContainer';
-
-const API_URL = 'http://127.0.0.1:8000/api/reports';
+import L from 'leaflet';
+import SearchBar from '../components/common/SearchBar';
+import 'leaflet/dist/leaflet.css';
 
 const PetaParkirPage = () => {
+  const [activeTab, setActiveTab] = useState('resmi'); // 'resmi' | 'laporan'
+  const [searchQuery, setSearchQuery] = useState('Jl. Tunjungan, Surabaya');
   const [reports, setReports] = useState([]);
-  const [filteredReports, setFilteredReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [selectedSpot, setSelectedSpot] = useState({
+    nama: 'Parkir tepi jalan, Jl. Tunjungan',
+    tarifMotor: 2000,
+    tarifMobil: 5000,
+    metode: 'QRIS, kartu, voucher',
+    infoJukir: 'Jukir resmi memakai rompi merah, peluit, dan kartu tanda anggota (KTA)[cite: 8].'
+  });
 
-  // Mengambil data dari FastAPI
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const response = await axios.get(API_URL);
-
-        // Mengambil features dari GeoJSON
-        const features = response.data.features;
-
-        // Mengubah GeoJSON menjadi format yang digunakan React
-        const formattedReports = features.map((feature) => {
-          const properties = feature.properties;
-          const coordinates = feature.geometry.coordinates;
-
-          return {
-            id: properties.report_id,
-
-            latitude: coordinates[1],
-            longitude: coordinates[0],
-
-            jenis_pelanggaran: properties.category,
-            keterangan: properties.description,
-
-            status: properties.status,
-            district: properties.district,
-
-            reported_amount: properties.reported_amount,
-            created_at: properties.created_at
-          };
-        });
-
-        setReports(formattedReports);
-        setFilteredReports(formattedReports);
-
-      } catch (err) {
-        console.error('Gagal mengambil laporan:', err);
-        setError('Gagal menghubungkan ke server API.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReports();
+    axios.get('http://localhost:8000/api/reports/')
+      .then(res => setReports(res.data))
+      .catch(err => console.error(err));
   }, []);
 
-  // Fitur pencarian
-  const handleSearch = (keyword) => {
-    if (!keyword) {
-      setFilteredReports(reports);
-      return;
-    }
-
-    const search = keyword.toLowerCase();
-
-    const filtered = reports.filter((report) =>
-      report.keterangan?.toLowerCase().includes(search) ||
-      report.jenis_pelanggaran?.toLowerCase().includes(search) ||
-      report.district?.toLowerCase().includes(search)
-    );
-
-    setFilteredReports(filtered);
-  };
-
   return (
-    <div className="container py-5">
+    <div className="container py-3">
+      {/* Top Search Bar */}
+      <div className="mb-3">
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      </div>
 
-      <h2 className="fw-bold mb-4 text-center">
-        Peta Lokasi & Status Parkir
-      </h2>
+      {/* Filter Tabs Mockup 1 */}
+      <div className="d-flex gap-2 mb-3">
+        <button
+          className={`btn btn-sm rounded-pill px-3 ${activeTab === 'resmi' ? 'btn-success' : 'btn-outline-secondary bg-white'}`}
+          onClick={() => setActiveTab('resmi')}
+        >
+          Titik resmi
+        </button>
+        <button
+          className={`btn btn-sm rounded-pill px-3 ${activeTab === 'laporan' ? 'btn-warning text-dark' : 'btn-outline-secondary bg-white'}`}
+          onClick={() => setActiveTab('laporan')}
+        >
+          Laporan warga
+        </button>
+      </div>
 
-      <SearchBar
-        onSearch={handleSearch}
-        placeholder="Cari wilayah atau pelanggaran..."
-      />
-
-      <div className="mb-4"></div>
-
-      {loading && (
-        <p className="text-center">
-          Memuat data laporan...
-        </p>
-      )}
-
-      {error && (
-        <div className="alert alert-danger">
-          {error}
-        </div>
-      )}
-
-      {!loading && !error && (
-        <>
-          <p className="text-muted">
-            Menampilkan {filteredReports.length} laporan
-          </p>
-
-          {/* Peta menggunakan data dari API */}
-          <MapContainer reports={filteredReports} />
-
-          <h4 className="fw-bold mb-3 mt-4">
-            Daftar Status Laporan Area Parkir
-          </h4>
-
-          <div className="row g-3">
-            {filteredReports.map((report) => (
-              <div key={report.id} className="col-md-6">
-
-                <div className="docker-card p-3 d-flex justify-content-between align-items-center">
-
-                  <div>
-                    <h6 className="fw-bold mb-1">
-                      {report.jenis_pelanggaran}
-                    </h6>
-
-                    <p className="text-muted small mb-1">
-                      {report.keterangan}
-                    </p>
-
-                    <small className="text-muted">
-                      {report.district}
-                    </small>
-
-                    <br />
-
-                    <small className="text-primary">
-                      Koordinat: {report.latitude}, {report.longitude}
-                    </small>
-                  </div>
-
-                  <span className={`badge ${
-                    report.status === 'verified'
-                      ? 'bg-success'
-                      : report.status === 'pending'
-                        ? 'bg-warning text-dark'
-                        : 'bg-danger'
-                  }`}>
-                    {report.status}
-                  </span>
-
+      {/* Leaflet Map Display */}
+      <div className="sj-card overflow-hidden mb-3" style={{ height: '350px' }}>
+        <MapContainer center={[-7.2575, 112.7378]} zoom={14} style={{ height: '100%', width: '100%' }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {reports.map((r) => (
+            <Marker key={r.id} position={[r.latitude, r.longitude]}>
+              <Popup>
+                <div>
+                  <strong>{r.jenis_pelanggaran}</strong><br/>
+                  <small>{r.keterangan}</small>
                 </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
 
+      {/* Bottom Spot Detail Card (Mockup 1) */}
+      <div className="sj-card p-3">
+        <h6 className="fw-bold mb-1">{selectedSpot.nama}</h6>
+        <p className="text-muted small mb-3">
+          Titik resmi Dishub. Tanpa karcis: bayar QRIS resmi, kartu, atau voucher[cite: 8].
+        </p>
+
+        <div className="row text-center border-top border-bottom py-2 mb-3 g-0">
+          <div className="col-6 border-end">
+            <small className="text-muted d-block">Motor</small>
+            <strong className="text-dark">Rp {selectedSpot.tarifMotor}</strong>
+          </div>
+          <div className="col-6">
+            <small className="text-muted d-block">Mobil</small>
+            <strong className="text-dark">Rp {selectedSpot.tarifMobil}</strong>
+          </div>
+        </div>
+
+        <div className="bg-light p-2 rounded mb-2 small">
+          <strong>Metode bayar:</strong> {selectedSpot.metode}
+        </div>
+        <p className="small text-secondary mb-0">
+          💡 {selectedSpot.infoJukir}
+        </p>
+      </div>
     </div>
   );
 };
